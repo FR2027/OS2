@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FRX OS // Next-Gen Cyberpunk Concept OS</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Orbitron (Display), JetBrains Mono (Code/Telemetry), Inter (UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Orbitron', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        cyber: {
+                            cyan: '#00f3ff',
+                            blue: '#2563eb',
+                            magenta: '#ff007f',
+                            dark: '#05070d',
+                            panel: 'rgba(13, 18, 30, 0.55)',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'scanline': 'scanline 6s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        scanline: {
+                            '0%': { transform: 'translateY(-100%)' },
+                            '100%': { transform: 'translateY(1000%)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-6px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbars & Hardware Aesthetics */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #030408;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Ambient Sci-Fi Background Grid */
+        .cyber-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(0, 243, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 243, 255, 0.04) 1px, transparent 1px);
+            mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
+        }
+
+        /* Flagship Hardware Chassis */
+        .phone-chassis {
+            position: relative;
+            width: 392px;
+            height: 836px;
+            max-width: 96vw;
+            max-height: 94vh;
+            border-radius: 54px;
+            background: linear-gradient(145deg, #1e2433, #0b0e17 30%, #070910 70%, #1a2234);
+            padding: 11px;
+            box-shadow: 
+                0 0 0 1px rgba(255, 255, 255, 0.14),
+                0 0 0 3px #090b10,
+                0 30px 90px -15px rgba(0, 0, 0, 0.95),
+                0 0 60px -10px rgba(0, 243, 255, 0.22),
+                0 0 90px -20px rgba(255, 0, 127, 0.18);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Metallic Side Buttons */
+        .hw-btn-power {
+            position: absolute;
+            right: -4px;
+            top: 210px;
+            width: 4px;
+            height: 76px;
+            background: linear-gradient(to bottom, #2c3548, #586785, #1b2230);
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            box-shadow: 2px 0 8px rgba(0, 243, 255, 0.3);
+            transition: all 0.15s ease;
+        }
+        .hw-btn-power:active {
+            transform: translateX(-1.5px);
+            box-shadow: 0 0 12px #00f3ff;
+        }
+
+        .hw-btn-vol-up {
+            position: absolute;
+            left: -4px;
+            top: 175px;
+            width: 4px;
+            height: 52px;
+            background: linear-gradient(to bottom, #2c3548, #4b5872, #1b2230);
+            border-radius: 4px 0 0 4px;
+        }
+
+        .hw-btn-vol-down {
+            position: absolute;
+            left: -4px;
+            top: 242px;
+            width: 4px;
+            height: 52px;
+            background: linear-gradient(to bottom, #2c3548, #4b5872, #1b2230);
+            border-radius: 4px 0 0 4px;
+        }
+
+        /* Inner OLED Display */
+        .phone-screen {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 44px;
+            overflow: hidden;
+            background: #04060b;
+            box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.08);
+        }
+
+        /* Liquid Glass / Frosted Glassmorphism */
+        .liquid-glass {
+            background: linear-gradient(135deg, rgba(22, 31, 52, 0.58) 0%, rgba(10, 14, 24, 0.48) 100%);
+            backdrop-filter: blur(22px) saturate(160%);
+            -webkit-backdrop-filter: blur(22px) saturate(160%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.18);
+        }
+
+        .liquid-glass-heavy {
+            background: linear-gradient(160deg, rgba(16, 23, 39, 0.82) 0%, rgba(7, 10, 18, 0.88) 100%);
+            backdrop-filter: blur(32px) saturate(180%);
+            -webkit-backdrop-filter: blur(32px) saturate(180%);
+            border: 1px solid rgba(0, 243, 255, 0.18);
+            box-shadow: 
+                0 20px 50px rgba(0, 0, 0, 0.75),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+        }
+
+        /* App Icon Tactile Micro-interaction */
+        .app-icon-tile {
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+        .app-icon-tile:hover {
+            transform: translateY(-3px) scale(1.05);
+            border-color: rgba(0, 243, 255, 0.45);
+            box-shadow: 0 10px 24px -4px rgba(0, 243, 255, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+        }
+        .app-icon-tile:active {
+            transform: scale(0.91);
+        }
+
+        /* Neon Text & Glow Utilities */
+        .glow-cyan {
+            text-shadow: 0 0 14px rgba(0, 243, 255, 0.65);
+        }
+        .glow-magenta {
+            text-shadow: 0 0 14px rgba(255, 0, 127, 0.65);
+        }
+
+        /* Equalizer Bar Animations */
+        @keyframes eqBounce {
+            0%, 100% { height: 22%; }
+            50% { height: 95%; }
+        }
+        .eq-bar {
+            animation: eqBounce 0.8s ease-in-out infinite;
+        }
+        .eq-paused .eq-bar {
+            animation-play-state: paused;
+            height: 20% !important;
+            transition: height 0.3s ease;
+        }
+
+        /* Hide scrollbars inside apps */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Screen Transitions */
+        .os-layer {
+            transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen w-screen flex items-center justify-center relative selection:bg-cyan-500/30 selection:text-cyan-200">
+
+    <!-- Ambient Cyberpunk Background Environment -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden">
+        <!-- Deep Radial Base -->
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,#0c172a_0%,#030408_70%)]"></div>
+        <!-- Animated Grid -->
+        <div class="absolute inset-0 cyber-grid opacity-80"></div>
+        <!-- Ambient Neon Orbs -->
+        <div class="absolute -top-32 -left-32 w-[520px] h-[520px] rounded-full bg-cyan-500/10 blur-[130px] animate-pulse-slow"></div>
+        <div class="absolute -bottom-32 -right-32 w-[520px] h-[520px] rounded-full bg-pink-600/10 blur-[130px] animate-pulse-slow" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] rounded-full bg-blue-600/10 blur-[150px]"></div>
+
+        <!-- Subtle Technical Watermark in Outer Desktop Space -->
+        <div class="hidden lg:flex fixed bottom-6 left-8 flex-col gap-1 font-mono text-[11px] text-cyan-400/40 tracking-widest">
+            <span>SYS.ARCH // FRX-OS KERNEL v4.9.2-NEURAL</span>
+            <span>RENDER // LIQUID-GLASS COMPOSITOR [60FPS]</span>
+        </div>
+        <div class="hidden lg:flex fixed bottom-6 right-8 items-center gap-2 font-mono text-[11px] text-slate-500">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+            <span>CLICK POWER BTN OR TOP-RIGHT STATUS FOR CONTROLS</span>
+        </div>
+    </div>
+
+    <!-- Flagship Smartphone Hardware Frame -->
+    <div class="phone-chassis z-10" id="phoneChassis">
+        <!-- Physical Hardware Buttons -->
+        <div class="hw-btn-vol-up" title="Volume Up" onclick="adjustVolumeStep(10)"></div>
+        <div class="hw-btn-vol-down" title="Volume Down" onclick="adjustVolumeStep(-10)"></div>
+        <div class="hw-btn-power" id="hwPowerBtn" title="Lock / Wake Device" onclick="togglePowerLock()"></div>
+
+        <!-- Inner OLED Screen -->
+        <div class="phone-screen" id="phoneScreen">
+            
+            <!-- Dynamic Screen Brightness Filter Layer -->
+            <div id="brightnessOverlay" class="absolute inset-0 bg-black pointer-events-none z-[60] transition-opacity duration-150" style="opacity: 0;"></div>
+
+            <!-- Live Animated Cyberpunk Wallpaper -->
+            <div class="absolute inset-0 z-0 overflow-hidden bg-[#04070f]">
+                <!-- Glowing Abstract Liquid Mesh -->
+                <div class="absolute -top-20 -left-16 w-80 h-80 rounded-full bg-gradient-to-tr from-blue-700/45 via-cyan-400/35 to-transparent blur-3xl animate-float"></div>
+                <div class="absolute top-1/3 -right-20 w-80 h-80 rounded-full bg-gradient-to-bl from-pink-600/35 via-purple-700/30 to-transparent blur-3xl animate-float" style="animation-delay: -2.5s;"></div>
+                <div class="absolute -bottom-24 left-1/4 w-96 h-96 rounded-full bg-gradient-to-t from-cyan-500/30 via-blue-900/40 to-transparent blur-3xl"></div>
+                
+                <!-- Subtle Cyber Horizon Grid & Scanline -->
+                <div class="absolute inset-0 opacity-25" style="background-image: radial-gradient(rgba(0, 243, 255, 0.35) 1px, transparent 1px); background-size: 20px 20px;"></div>
+                <div class="w-full h-16 bg-gradient-to-b from-transparent via-cyan-400/10 to-transparent animate-scanline pointer-events-none"></div>
+            </div>
+
+            <!-- Dynamic Island / Neural Pill Notch -->
+            <div class="absolute top-3 left-1/2 -translate-x-1/2 z-50 flex items-center justify-between px-3 w-[114px] h-[28px] bg-black rounded-full border border-white/10 shadow-[0_4px_15px_rgba(0,0,0,0.85)] transition-all duration-300" id="dynamicIsland">
+                <div class="flex items-center gap-1.5">
+                    <span id="islandPulse" class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f3ff]"></span>
+                    <span id="islandLabel" class="font-mono text-[9px] text-cyan-300/90 tracking-wider">FRX</span>
+                </div>
+                <!-- Camera Lens Reflection -->
+                <div class="w-3.5 h-3.5 rounded-full bg-[#0a0f1c] border border-slate-700/70 flex items-center justify-center relative overflow-hidden">
+                    <div class="w-1.5 h-1.5 rounded-full bg-blue-500/40 blur-[0.5px]"></div>
+                    <div class="absolute top-0.5 right-0.5 w-1 h-1 rounded-full bg-cyan-200/70"></div>
+                </div>
+            </div>
+
+            <!-- ========================================================= -->
+            <!-- 1. TOP STATUS BAR (Persistent across OS views)            -->
+            <!-- ========================================================= -->
+            <header class="relative z-40 flex items-center justify-between px-6 pt-3.5 pb-2 text-white select-none">
+                <!-- Left: Live Time & FRX Badge -->
+                <div class="flex items-center gap-1.5">
+                    <span id="statusTime" class="font-mono text-[13px] font-bold tracking-tight text-white">15:58</span>
+                    <span class="px-1.5 py-0.5 rounded text-[8px] font-display font-bold tracking-widest bg-cyan-400/15 text-cyan-300 border border-cyan-400/30">FRX</span>
+                </div>
+
+                <!-- Right: Interactive Status Triggers (Opens Control Center) -->
+                <button onclick="toggleControlCenter(true)" aria-label="Open Control Center" class="flex items-center gap-2 py-1 px-2 -mr-2 rounded-full hover:bg-white/10 active:scale-95 transition-all cursor-pointer group">
+                    <!-- 5G Neural Signal SVG -->
+                    <svg class="w-3.5 h-3.5 text-cyan-300 group-hover:text-cyan-200 transition-colors" viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="2" y="16" width="3" height="6" rx="1"/>
+                        <rect x="7" y="12" width="3" height="10" rx="1"/>
+                        <rect x="12" y="8" width="3" height="14" rx="1"/>
+                        <rect x="17" y="4" width="3" height="18" rx="1" class="opacity-90"/>
+                    </svg>
+                    <!-- Cyber Wi-Fi SVG -->
+                    <svg id="statusWifiIcon" class="w-3.5 h-3.5 text-white group-hover:text-cyan-300 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+                        <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+                        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                        <line x1="12" y1="20" x2="12.01" y2="20"/>
+                    </svg>
+                    <!-- Custom Animated Neon Battery -->
+                    <div class="flex items-center gap-1">
+                        <div class="w-[22px] h-[11px] rounded-[3.5px] border border-cyan-300/70 p-[1.5px] flex items-center relative">
+                            <div class="h-full w-[86%] rounded-[1.5px] bg-gradient-to-r from-cyan-400 to-emerald-400 shadow-[0_0_6px_#00f3ff]"></div>
+                        </div>
+                        <div class="w-[1.5px] h-[4px] bg-cyan-300/70 rounded-r-sm"></div>
+                    </div>
+                </button>
+            </header>
+
+            <!-- ========================================================= -->
+            <!-- 2. LOCK SCREEN LAYER                                      -->
+            <!-- ========================================================= -->
+            <section id="lockScreen" class="os-layer absolute inset-0 z-30 flex flex-col justify-between pt-16 pb-8 px-6 bg-gradient-to-b from-black/30 via-transparent to-black/60 backdrop-blur-[4px]">
+                <!-- Top Lock Telemetry & Big Futuristic Clock -->
+                <div class="flex flex-col items-center text-center mt-4">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full liquid-glass mb-4">
+                        <svg class="w-3 h-3 text-pink-500 animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <span class="font-mono text-[10px] tracking-[0.2em] text-cyan-200 uppercase">Neural Encryption Active</span>
+                    </div>
+
+                    <div id="lockDate" class="font-mono text-xs tracking-[0.18em] text-cyan-300/80 uppercase mb-1">
+                        SAT, NOV 14 // NEO-TAIPEI
+                    </div>
+                    
+                    <div id="lockClock" class="font-display text-[68px] leading-none font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white via-cyan-100 to-cyan-400/80 drop-shadow-[0_0_24px_rgba(0,243,255,0.35)]">
+                        15:58
+                    </div>
+
+                    <!-- Lock Screen Live Widget Pills -->
+                    <div class="grid grid-cols-2 gap-2.5 w-full mt-6">
+                        <div class="liquid-glass rounded-2xl p-3 flex items-center gap-3 text-left">
+                            <div class="w-8 h-8 rounded-xl bg-cyan-500/15 border border-cyan-400/30 flex items-center justify-center text-cyan-300">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="font-mono text-xs font-bold text-white">22°C CYBER</div>
+                                <div class="text-[10px] text-slate-400">Acid Rain: 12%</div>
+                            </div>
+                        </div>
+                        <div class="liquid-glass rounded-2xl p-3 flex items-center gap-3 text-left">
+                            <div class="w-8 h-8 rounded-xl bg-pink-500/15 border border-pink-400/30 flex items-center justify-center text-pink-400">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="font-mono text-xs font-bold text-white">NEXO READY</div>
+                                <div class="text-[10px] text-slate-400">Latency: 4ms</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Encrypted Notification Preview -->
+                <div class="liquid-glass rounded-2xl p-3.5 border-l-2 border-l-cyan-400 my-auto">
+                    <div class="flex items-center justify-between mb-1">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+                            <span class="font-display text-[10px] font-bold tracking-wider text-cyan-300">NEXO AI CORE</span>
+                        </div>
+                        <span class="font-mono text-[10px] text-slate-400">NOW</span>
+                    </div>
+                    <p class="text-xs text-slate-200 leading-relaxed">
+                        神經網路同步完成。所有系統模組已進入超頻待機模式，請驗證生物特徵以進入 FRX OS。
+                    </p>
+                </div>
+
+                <!-- Bottom Biometric Scanner Unlock Trigger -->
+                <div class="flex flex-col items-center gap-3">
+                    <button id="biometricUnlockBtn" onclick="unlockOS()" class="group relative w-20 h-20 rounded-full flex items-center justify-center cursor-pointer focus:outline-none">
+                        <!-- Outer Rotating Neon Ring -->
+                        <span class="absolute inset-0 rounded-full border border-dashed border-cyan-400/50 group-hover:border-cyan-300 group-hover:rotate-90 transition-all duration-700"></span>
+                        <span class="absolute inset-1.5 rounded-full bg-cyan-500/10 group-hover:bg-cyan-400/20 backdrop-blur-md border border-cyan-400/40 shadow-[0_0_25px_rgba(0,243,255,0.3)] group-active:scale-90 transition-all duration-200"></span>
+                        <!-- Fingerprint SVG -->
+                        <svg class="w-9 h-9 text-cyan-300 group-hover:text-white group-hover:scale-110 transition-all duration-300 relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 4"/>
+                            <path d="M5 19.5C5.5 18 6 15 6 12c0-.7.12-1.37.34-2"/>
+                            <path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/>
+                            <path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/>
+                            <path d="M8.65 22c.21-.66.45-1.32.57-2"/>
+                            <path d="M14 13.12c0 2.38 0 6.38-1 8.88"/>
+                            <path d="M2 16h.01"/>
+                            <path d="M21.8 16c.2-2 .131-5.354 0-6"/>
+                            <path d="M9 6.8a6 6 0 0 1 9 5.2c0 .47 0 1.17-.02 2"/>
+                        </svg>
+                    </button>
+                    <span class="font-mono text-[10px] tracking-[0.22em] text-cyan-300/80 uppercase animate-pulse">
+                        Tap Sensor to Unlock
+                    </span>
+                </div>
+            </section>
+
+            <!-- ========================================================= -->
+            <!-- 3. HOME SCREEN LAYER                                      -->
+            <!-- ========================================================= -->
+            <main id="homeScreen" class="os-layer absolute inset-0 z-10 flex flex-col justify-between pt-12 pb-6 px-5 opacity-0 scale-95 pointer-events-none">
+                
+                <!-- Widgets Container -->
+                <div class="space-y-3.5 mt-1">
+                    <!-- Digital Clock & Cyber Weather Widget -->
+                    <div class="liquid-glass rounded-[26px] p-4 relative overflow-hidden group">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-cyan-400/15 blur-xl group-hover:bg-cyan-400/25 transition-all"></div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-0.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-pink-500 animate-ping"></span>
+                                    <span id="homeDate" class="font-mono text-[10px] tracking-widest text-cyan-300/90 uppercase">SAT • NOV 14</span>
+                                </div>
+                                <div id="homeClock" class="font-display text-4xl font-black tracking-wider text-white glow-cyan">
+                                    15:58
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white/5 border border-white/10">
+                                    <svg class="w-4 h-4 text-cyan-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                                    </svg>
+                                    <span class="font-mono text-sm font-bold text-white">22°C</span>
+                                </div>
+                                <div class="font-mono text-[10px] text-slate-400 mt-1.5">SECTOR 07 // CLEAR</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live System Performance Telemetry Widget (CPU / RAM / NPU) -->
+                    <div class="liquid-glass rounded-[26px] p-4 border-t border-t-cyan-400/30">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-3.5 h-3.5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                    <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                                    <rect x="9" y="9" width="6" height="6"></rect>
+                                    <line x1="9" y1="1" x2="9" y2="4"></line>
+                                    <line x1="15" y1="1" x2="15" y2="4"></line>
+                                    <line x1="9" y1="20" x2="9" y2="23"></line>
+                                    <line x1="15" y1="20" x2="15" y2="23"></line>
+                                    <line x1="20" y1="9" x2="23" y2="9"></line>
+                                    <line x1="20" y1="14" x2="23" y2="14"></line>
+                                    <line x1="1" y1="9" x2="4" y2="9"></line>
+                                    <line x1="1" y1="14" x2="4" y2="14"></line>
+                                </svg>
+                                <span class="font-display text-[11px] font-bold tracking-wider text-white">QUANTUM TELEMETRY</span>
+                            </div>
+                            <span id="telemetryTemp" class="font-mono text-[10px] px-2 py-0.5 rounded-md bg-cyan-500/15 text-cyan-300 border border-cyan-400/25">
+                                38.4°C OPTIMAL
+                            </span>
+                        </div>
+
+                        <div class="space-y-2.5">
+                            <!-- CPU Bar -->
+                            <div>
+                                <div class="flex justify-between font-mono text-[10px] mb-1">
+                                    <span class="text-slate-300">CPU // KRYO-X9</span>
+                                    <span id="cpuVal" class="text-cyan-300 font-bold">42%</span>
+                                </div>
+                                <div class="w-full h-1.5 bg-slate-900/90 rounded-full overflow-hidden p-[1px] border border-white/5">
+                                    <div id="cpuBar" class="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 shadow-[0_0_8px_#00f3ff] transition-all duration-700" style="width: 42%"></div>
+                                </div>
+                            </div>
+
+                            <!-- RAM Bar -->
+                            <div>
+                                <div class="flex justify-between font-mono text-[10px] mb-1">
+                                    <span class="text-slate-300">RAM // 24GB LPDDR6X</span>
+                                    <span id="ramVal" class="text-pink-400 font-bold">61%</span>
+                                </div>
+                                <div class="w-full h-1.5 bg-slate-900/90 rounded-full overflow-hidden p-[1px] border border-white/5">
+                                    <div id="ramBar" class="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500 shadow-[0_0_8px_#ff007f] transition-all duration-700" style="width: 61%"></div>
+                                </div>
+                            </div>
+
+                            <!-- Neural Core Bar -->
+                            <div>
+                                <div class="flex justify-between font-mono text-[10px] mb-1">
+                                    <span class="text-slate-300">NPU // NEURAL ENGINE</span>
+                                    <span id="npuVal" class="text-emerald-300 font-bold">28%</span>
+                                </div>
+                                <div class="w-full h-1.5 bg-slate-900/90 rounded-full overflow-hidden p-[1px] border border-white/5">
+                                    <div id="npuBar" class="h-full rounded-full bg-gradient-to-r from-cyan-400 to-emerald-400 shadow-[0_0_8px_#34d399] transition-all duration-700" style="width: 28%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- App Grid (Liquid Glass Icons) -->
+                <div class="grid grid-cols-4 gap-y-5 gap-x-3 px-1 my-auto">
+                    <!-- App 1: NEXO AI -->
+                    <button onclick="openApp('nexo')" class="flex flex-col items-center gap-1.5 group cursor-pointer focus:outline-none">
+                        <div class="app-icon-tile w-[62px] h-[62px] rounded-[20px] liquid-glass flex items-center justify-center relative overflow-hidden border-cyan-400/35">
+                            <div class="absolute inset-0 bg-gradient-to-br from-cyan-400/25 via-blue-600/20 to-pink-500/25"></div>
+                            <svg class="w-7 h-7 text-cyan-300 drop-shadow-[0_0_8px_rgba(0,243,255,0.8)] relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/>
+                                <path d="M16 14H8a4 4 0 0 0-4 4v2h16v-2a4 4 0 0 0-4-4z"/>
+                                <circle cx="12" cy="6" r="1" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <span class="text-[11px] font-medium text-slate-200 tracking-tight group-hover:text-cyan-300 transition-colors">NEXO AI</span>
+                    </button>
+
+                    <!-- App 2: FRX Music -->
+                    <button onclick="openApp('music')" class="flex flex-col items-center gap-1.5 group cursor-pointer focus:outline-none">
+                        <div class="app-icon-tile w-[62px] h-[62px] rounded-[20px] liquid-glass flex items-center justify-center relative overflow-hidden border-pink-500/35">
+                            <div class="absolute inset-0 bg-gradient-to-br from-pink-500/30 via-purple-600/20 to-cyan-500/20"></div>
+                            <svg class="w-7 h-7 text-pink-400 drop-shadow-[0_0_8px_rgba(255,0,127,0.8)] relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path d="M9 18V5l12-2v13"/>
+                                <circle cx="6" cy="18" r="3"/>
+                                <circle cx="18" cy="16" r="3"/>
+                            </svg>
+                        </div>
+                        <span class="text-[11px] font-medium text-slate-200 tracking-tight group-hover:text-pink-300 transition-colors">FRX Music</span>
+                    </button>
+
+                    <!-- App 3: Terminal -->
+                    <button onclick="openApp('terminal')" class="flex flex-col items-center gap-1.5 group cursor-pointer focus:outline-none">
+                        <div class="app-icon-tile w-[62px] h-[62px] rounded-[20px] liquid-glass flex items-center justify-center relative overflow-hidden border-emerald-400/35">
+                            <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/25 via-slate-900/60 to-cyan-500/20"></div>
+                            <svg class="w-7 h-7 text-emerald-300 drop-shadow-[0_0_8px_rgba(52,211,153,0.75)] relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="4 17 10 11 4 5"></polyline>
+                                <line x1="12" y1="19" x2="20" y2="19"></line>
+                            </svg>
+                        </div>
+                        <span class="text-[11px] font-medium text-slate-200 tracking-tight group-hover:text-emerald-300 transition-colors">終端機</span>
+                    </button>
+
+                    <!-- App 4: CyberVault -->
+                    <button onclick="showToast('CYBERVAULT // 量子冷錢包已鎖定')" class="flex flex-col items-center gap-1.5 group cursor-pointer focus:outline-none">
+                        <div class="app-icon-tile w-[62px] h-[62px] rounded-[20px] liquid-glass flex items-center justify-center relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-blue-500/25 to-indigo-900/40"></div>
+                            <svg class="w-7 h-7 text-blue-300 relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                <path d="m9 12 2 2 4-4"/>
+                            </svg>
+                        </div>
+                        <span class="text-[11px] font-medium text-slate-200 tracking-tight">Vault</span>
+                    </button>
+
+                    <!-- App 5: NetRunner -->
+                    <button onclick="showToast('NETRUNNER // 暗網洋蔥路由連線中...')" class="flex flex-col items-center gap-1.5 group cursor-pointer focus:outline-none">
+                        <div class="app-icon-tile w-[62px] h-[62px] rounded-[20px] liquid-glass flex items-center justify-center relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-blue-800/30"></div>
+                            <svg class="w-7 h-7 text-cyan-200 relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="2" y1="12" x2="22" y2="12"/>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                            </svg>
+                        </div>
+                        <span class="text-[11px] font-medium text-slate-200 tracking-tight">NetLink</span>
+                    </button>
+
+                    <!-- App 6: Optics Cam -->
+                    <button onclick="showToast('OPTICS // 夜視光學感光元件就緒')" class="flex flex-col items-center gap-1.5 group cursor-pointer focus:outline-none">
+                        <div class="app-icon-tile w-[62px] h-[62px] rounded-[20px] liquid-glass flex items-center justify-center relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-pink-600/25"></div>
+                            <svg class="w-7 h-7 text-amber-300 relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                            </svg>
+                        </div>
+                        <span class="text-[11px] font-medium text-slate-200 tracking-tight">Optics</span>
+                    </button>
+
+                    <!-- App 7: BioSync -->
+                    <button onclick="showToast('BIOSYNC // 心率 72 BPM • 神經壓力指數極低')" class="flex flex-col items-center gap-1.5 group cursor-pointer focus:outline-none">
+                        <div class="app-icon-tile w-[62px] h-[62px] rounded-[20px] liquid-glass flex items-center justify-center relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-rose-500/25 to-purple-800/30"></div>
+                            <svg class="w-7 h-7 text-rose-400 relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                        </div>
+                        <span class="text-[11px] font-medium text-slate-200 tracking-tight">BioSync</span>
+                    </button>
+
+                    <!-- App 8: Control Deck -->
+                    <button onclick="toggleControlCenter(true)" class="flex flex-col items-center gap-1.5 group cursor-pointer focus:outline-none">
+                        <div class="app-icon-tile w-[62px] h-[62px] rounded-[20px] liquid-glass flex items-center justify-center relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-slate-600/30 to-cyan-900/40"></div>
+                            <svg class="w-7 h-7 text-slate-200 relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <line x1="4" y1="21" x2="4" y2="14"></line>
+                                <line x1="4" y1="10" x2="4" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12" y2="3"></line>
+                                <line x1="20" y1="21" x2="20" y2="16"></line>
+                                <line x1="20" y1="12" x2="20" y2="3"></line>
+                                <line x1="1" y1="14" x2="7" y2="14"></line>
+                                <line x1="9" y1="8" x2="15" y2="8"></line>
+                                <line x1="17" y1="16" x2="23" y2="16"></line>
+                            </svg>
+                        </div>
+                        <span class="text-[11px] font-medium text-slate-200 tracking-tight">控制中心</span>
+                    </button>
+                </div>
+
+                <!-- Bottom Frosted Dock -->
+                <div class="space-y-3">
+                    <div class="liquid-glass rounded-[28px] p-2.5 flex items-center justify-around">
+                        <button onclick="showToast('COMM // 加密量子語音頻道待命中')" class="app-icon-tile w-13 h-13 p-3 rounded-2xl bg-emerald-500/15 border border-emerald-400/30 text-emerald-300 cursor-pointer">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                        </button>
+                        <button onclick="openApp('nexo')" class="app-icon-tile w-13 h-13 p-3 rounded-2xl bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 shadow-[0_0_15px_rgba(0,243,255,0.25)] cursor-pointer">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </button>
+                        <button onclick="openApp('music')" class="app-icon-tile w-13 h-13 p-3 rounded-2xl bg-pink-500/20 border border-pink-400/40 text-pink-300 cursor-pointer">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/>
+                            </svg>
+                        </button>
+                        <button onclick="openApp('terminal')" class="app-icon-tile w-13 h-13 p-3 rounded-2xl bg-blue-500/20 border border-blue-400/40 text-blue-300 cursor-pointer">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                                <line x1="8" y1="21" x2="16" y2="21"/>
+                                <line x1="12" y1="17" x2="12" y2="21"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Home Gesture Bar -->
+                    <div class="flex justify-center">
+                        <div class="w-32 h-1 rounded-full bg-white/40"></div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- ========================================================= -->
+            <!-- 4. INTERACTIVE APP WINDOWS (Overlay Modals inside OS)     -->
+            <!-- ========================================================= -->
+            
+            <!-- APP A: NEXO AI ASSISTANT -->
+            <div id="app-nexo" class="os-layer absolute inset-0 z-35 bg-[#060913]/95 backdrop-blur-2xl flex flex-col pt-12 pb-5 px-4 opacity-0 scale-95 pointer-events-none">
+                <!-- App Header -->
+                <div class="flex items-center justify-between pb-3 border-b border-cyan-500/20">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-xl bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300 shadow-[0_0_12px_rgba(0,243,255,0.4)]">
+                            <span class="font-display text-xs font-black">NX</span>
+                        </div>
+                        <div>
+                            <h2 class="font-display text-sm font-bold text-white tracking-wider">NEXO AI <span class="text-[10px] text-cyan-400">v4.2</span></h2>
+                            <span class="font-mono text-[9px] text-emerald-400 flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> NEURAL LINK ONLINE
+                            </span>
+                        </div>
+                    </div>
+                    <button onclick="closeAllApps()" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 font-mono text-[11px] text-slate-300 cursor-pointer">
+                        ESC
+                    </button>
+                </div>
+
+                <!-- Chat History -->
+                <div id="nexoChatFeed" class="flex-1 overflow-y-auto no-scrollbar py-4 space-y-3">
+                    <div class="liquid-glass rounded-2xl rounded-tl-sm p-3 text-xs text-slate-200 border-l-2 border-l-cyan-400">
+                        <div class="font-mono text-[9px] text-cyan-300 mb-1">NEXO CORE // 15:58</div>
+                        歡迎回來，架構師。我是 FRX OS 的中樞神經人工智慧 NEXO。需要我執行系統超頻、分析周邊網路，或啟動暗影協定嗎？
+                    </div>
+                </div>
+
+                <!-- Quick Prompt Chips -->
+                <div class="flex gap-1.5 overflow-x-auto no-scrollbar py-2">
+                    <button onclick="sendNexoPrompt('分析目前系統狀態')" class="shrink-0 px-2.5 py-1.5 rounded-xl bg-cyan-500/15 border border-cyan-400/30 text-[11px] text-cyan-200 hover:bg-cyan-500/25 cursor-pointer">
+                        ⚡ 分析系統狀態
+                    </button>
+                    <button onclick="sendNexoPrompt('啟動超頻模式')" class="shrink-0 px-2.5 py-1.5 rounded-xl bg-pink-500/15 border border-pink-400/30 text-[11px] text-pink-200 hover:bg-pink-500/25 cursor-pointer">
+                        🔥 啟動超頻模式
+                    </button>
+                    <button onclick="sendNexoPrompt('掃描附近網路節點')" class="shrink-0 px-2.5 py-1.5 rounded-xl bg-blue-500/15 border border-blue-400/30 text-[11px] text-blue-200 hover:bg-blue-500/25 cursor-pointer">
+                        📡 掃描網路節點
+                    </button>
+                </div>
+
+                <!-- Input Box -->
+                <form onsubmit="handleNexoSubmit(event)" class="flex gap-2 mt-1">
+                    <input id="nexoInput" type="text" placeholder="輸入指令給 NEXO AI..." class="flex-1 bg-white/5 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400">
+                    <button type="submit" class="px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-display font-bold text-xs shadow-[0_0_15px_rgba(0,243,255,0.4)] active:scale-95 transition-transform cursor-pointer">
+                        SEND
+                    </button>
+                </form>
+
+                <!-- Home Indicator -->
+                <div onclick="closeAllApps()" class="mt-3 flex justify-center cursor-pointer py-1">
+                    <div class="w-32 h-1 rounded-full bg-white/40 hover:bg-cyan-400 transition-colors"></div>
+                </div>
+            </div>
+
+            <!-- APP B: FRX MUSIC (Cyberpunk Synthwave Player) -->
+            <div id="app-music" class="os-layer absolute inset-0 z-35 bg-[#070612]/95 backdrop-blur-2xl flex flex-col justify-between pt-12 pb-5 px-5 opacity-0 scale-95 pointer-events-none">
+                <div class="flex items-center justify-between">
+                    <span class="font-display text-xs font-bold tracking-widest text-pink-400">FRX AUDIO // LOSSLESS</span>
+                    <button onclick="closeAllApps()" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 font-mono text-[11px] text-slate-300 cursor-pointer">
+                        ESC
+                    </button>
+                </div>
+
+                <!-- Album Hologram Art -->
+                <div class="my-auto flex flex-col items-center">
+                    <div class="w-52 h-52 rounded-[32px] liquid-glass p-3 relative flex items-center justify-center border-pink-500/40 shadow-[0_0_40px_rgba(255,0,127,0.25)]">
+                        <div class="absolute inset-0 rounded-[32px] bg-gradient-to-tr from-pink-600/30 via-purple-900/40 to-cyan-500/30"></div>
+                        <!-- Animated Equalizer Visualizer -->
+                        <div id="musicVisualizer" class="flex items-end justify-center gap-1.5 h-24 w-32 z-10">
+                            <div class="eq-bar w-2 bg-cyan-400 rounded-full" style="animation-delay: 0.1s"></div>
+                            <div class="eq-bar w-2 bg-pink-500 rounded-full" style="animation-delay: 0.3s"></div>
+                            <div class="eq-bar w-2 bg-purple-400 rounded-full" style="animation-delay: 0.0s"></div>
+                            <div class="eq-bar w-2 bg-cyan-300 rounded-full" style="animation-delay: 0.4s"></div>
+                            <div class="eq-bar w-2 bg-pink-400 rounded-full" style="animation-delay: 0.2s"></div>
+                            <div class="eq-bar w-2 bg-blue-400 rounded-full" style="animation-delay: 0.5s"></div>
+                            <div class="eq-bar w-2 bg-cyan-400 rounded-full" style="animation-delay: 0.15s"></div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-6">
+                        <h3 id="trackTitle" class="font-display text-lg font-bold text-white tracking-wide">NEON OVERDRIVE</h3>
+                        <p id="trackArtist" class="font-mono text-xs text-pink-400 mt-1">KRYO SYNTH // 2088 EDITION</p>
+                    </div>
+
+                    <!-- Progress Scrubber -->
+                    <div class="w-full mt-6">
+                        <div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                            <div id="musicProgress" class="h-full w-2/5 bg-gradient-to-r from-cyan-400 to-pink-500 rounded-full"></div>
+                        </div>
+                        <div class="flex justify-between font-mono text-[10px] text-slate-400 mt-1.5">
+                            <span>01:42</span>
+                            <span>04:18</span>
+                        </div>
+                    </div>
+
+                    <!-- Playback Controls -->
+                    <div class="flex items-center justify-center gap-6 mt-5">
+                        <button onclick="switchTrack(-1)" class="p-3 rounded-2xl liquid-glass text-slate-200 hover:text-cyan-300 active:scale-90 transition-all cursor-pointer">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" stroke-width="2"/></svg>
+                        </button>
+                        <button id="playPauseBtn" onclick="togglePlayMusic()" class="w-16 h-16 rounded-full bg-gradient-to-tr from-pink-500 to-cyan-400 text-slate-950 flex items-center justify-center shadow-[0_0_25px_rgba(255,0,127,0.5)] active:scale-90 transition-all cursor-pointer">
+                            <svg id="playPauseIcon" class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                                <rect x="6" y="4" width="4" height="16" rx="1"/>
+                                <rect x="14" y="4" width="4" height="16" rx="1"/>
+                            </svg>
+                        </button>
+                        <button onclick="switchTrack(1)" class="p-3 rounded-2xl liquid-glass text-slate-200 hover:text-cyan-300 active:scale-90 transition-all cursor-pointer">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div onclick="closeAllApps()" class="flex justify-center cursor-pointer py-1">
+                    <div class="w-32 h-1 rounded-full bg-white/40 hover:bg-pink-400 transition-colors"></div>
+                </div>
+            </div>
+
+            <!-- APP C: FRX-SHELL TERMINAL -->
+            <div id="app-terminal" class="os-layer absolute inset-0 z-35 bg-[#03060a]/95 backdrop-blur-2xl flex flex-col pt-12 pb-5 px-4 font-mono opacity-0 scale-95 pointer-events-none">
+                <div class="flex items-center justify-between pb-2.5 border-b border-emerald-500/25">
+                    <span class="text-xs font-bold text-emerald-400">root@frx-os:~#</span>
+                    <button onclick="closeAllApps()" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-[11px] text-slate-300 cursor-pointer">
+                        EXIT
+                    </button>
+                </div>
+
+                <div id="terminalOutput" class="flex-1 overflow-y-auto no-scrollbar py-3 space-y-1.5 text-[11px] text-emerald-300/90 leading-relaxed">
+                    <div class="text-cyan-400">FRX-SHELL v4.9.2 [Quantum Kernel]</div>
+                    <div class="text-slate-400">Type 'help' or tap a quick command below.</div>
+                </div>
+
+                <!-- Quick Terminal Commands -->
+                <div class="flex gap-1.5 py-2 overflow-x-auto no-scrollbar">
+                    <button onclick="runTerminalCmd('help')" class="px-2.5 py-1 rounded bg-emerald-500/15 border border-emerald-500/30 text-[10px] text-emerald-300 cursor-pointer">help</button>
+                    <button onclick="runTerminalCmd('sysinfo')" class="px-2.5 py-1 rounded bg-emerald-500/15 border border-emerald-500/30 text-[10px] text-emerald-300 cursor-pointer">sysinfo</button>
+                    <button onclick="runTerminalCmd('hack')" class="px-2.5 py-1 rounded bg-emerald-500/15 border border-emerald-500/30 text-[10px] text-emerald-300 cursor-pointer">hack</button>
+                    <button onclick="runTerminalCmd('clear')" class="px-2.5 py-1 rounded bg-emerald-500/15 border border-emerald-500/30 text-[10px] text-emerald-300 cursor-pointer">clear</button>
+                </div>
+
+                <form onsubmit="handleTerminalSubmit(event)" class="flex items-center gap-2 bg-black/60 border border-emerald-500/30 rounded-xl px-3 py-2">
+                    <span class="text-emerald-400 text-xs">$</span>
+                    <input id="terminalInput" type="text" autocomplete="off" placeholder="enter command..." class="flex-1 bg-transparent text-xs text-emerald-200 focus:outline-none">
+                </form>
+
+                <div onclick="closeAllApps()" class="mt-3 flex justify-center cursor-pointer py-1">
+                    <div class="w-32 h-1 rounded-full bg-white/40 hover:bg-emerald-400 transition-colors"></div>
+                </div>
+            </div>
+
+            <!-- ========================================================= -->
+            <!-- 5. SLIDE-DOWN LIQUID GLASS CONTROL CENTER                 -->
+            <!-- ========================================================= -->
+            <div id="controlCenter" class="absolute inset-0 z-50 bg-black/60 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300 flex flex-col justify-start pt-12 px-5">
+                <div id="controlCenterPanel" class="liquid-glass-heavy rounded-[32px] p-5 transform -translate-y-8 transition-transform duration-300 space-y-5">
+                    
+                    <!-- Header -->
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="font-display text-xs font-bold tracking-widest text-cyan-300">FRX CONTROL DECK</span>
+                            <div class="font-mono text-[10px] text-slate-400">QUANTUM TELEMETRY & QUICK IO</div>
+                        </div>
+                        <button onclick="toggleControlCenter(false)" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white cursor-pointer">
+                            ✕
+                        </button>
+                    </div>
+
+                    <!-- Connectivity & Mode Toggles Grid -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <!-- Toggle 1: Quantum Wi-Fi -->
+                        <button id="cc-wifi" onclick="toggleQuickSetting('wifi')" class="cc-toggle active p-3.5 rounded-2xl bg-cyan-500/20 border border-cyan-400/50 shadow-[0_0_20px_rgba(0,243,255,0.2)] flex items-center gap-3 text-left transition-all cursor-pointer">
+                            <div class="w-9 h-9 rounded-xl bg-cyan-400 text-slate-950 flex items-center justify-center shrink-0">
+                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+                                    <path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-xs font-bold text-white">Wi-Fi 7E</div>
+                                <div id="cc-wifi-sub" class="font-mono text-[10px] text-cyan-300">CYBER_NET</div>
+                            </div>
+                        </button>
+
+                        <!-- Toggle 2: Neural Link -->
+                        <button id="cc-neural" onclick="toggleQuickSetting('neural')" class="cc-toggle active p-3.5 rounded-2xl bg-pink-500/20 border border-pink-400/50 shadow-[0_0_20px_rgba(255,0,127,0.2)] flex items-center gap-3 text-left transition-all cursor-pointer">
+                            <div class="w-9 h-9 rounded-xl bg-pink-500 text-white flex items-center justify-center shrink-0">
+                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                    <circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-xs font-bold text-white">Neural Link</div>
+                                <div id="cc-neural-sub" class="font-mono text-[10px] text-pink-300">SYNCED</div>
+                            </div>
+                        </button>
+
+                        <!-- Toggle 3: Overdrive Mode -->
+                        <button id="cc-overdrive" onclick="toggleQuickSetting('overdrive')" class="cc-toggle p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3 text-left transition-all cursor-pointer">
+                            <div id="cc-overdrive-icon" class="w-9 h-9 rounded-xl bg-white/10 text-slate-300 flex items-center justify-center shrink-0">
+                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-xs font-bold text-white">Overdrive</div>
+                                <div id="cc-overdrive-sub" class="font-mono text-[10px] text-slate-400">STANDBY</div>
+                            </div>
+                        </button>
+
+                        <!-- Toggle 4: Stealth / Ghost Mode -->
+                        <button id="cc-stealth" onclick="toggleQuickSetting('stealth')" class="cc-toggle p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3 text-left transition-all cursor-pointer">
+                            <div id="cc-stealth-icon" class="w-9 h-9 rounded-xl bg-white/10 text-slate-300 flex items-center justify-center shrink-0">
+                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-xs font-bold text-white">Ghost VPN</div>
+                                <div id="cc-stealth-sub" class="font-mono text-[10px] text-slate-400">OFF</div>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Interactive Brightness & Volume Sliders -->
+                    <div class="space-y-3.5 pt-1">
+                        <!-- Brightness Slider -->
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-3">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-mono text-[10px] text-cyan-300 flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+                                    OLED LUMINANCE
+                                </span>
+                                <span id="brightnessLabel" class="font-mono text-[10px] text-white font-bold">100%</span>
+                            </div>
+                            <input type="range" min="25" max="100" value="100" oninput="setScreenBrightness(this.value)" class="w-full accent-cyan-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+                        </div>
+
+                        <!-- Volume Slider -->
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-3">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-mono text-[10px] text-pink-400 flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                                    SYNTH AUDIO GAIN
+                                </span>
+                                <span id="volumeLabel" class="font-mono text-[10px] text-white font-bold">75%</span>
+                            </div>
+                            <input id="volumeSlider" type="range" min="0" max="100" value="75" oninput="setSystemVolume(this.value)" class="w-full accent-pink-500 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+                        </div>
+                    </div>
+
+                    <!-- Lock Device Action Button -->
+                    <button onclick="lockOS()" class="w-full py-3 rounded-2xl bg-gradient-to-r from-rose-600/80 to-pink-600/80 hover:from-rose-500 hover:to-pink-500 border border-pink-400/40 text-white font-display text-xs font-bold tracking-widest flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,0,127,0.3)] active:scale-95 transition-all cursor-pointer">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        LOCK SYSTEM
+                    </button>
+                </div>
+
+                <!-- Tap outside area to dismiss Control Center -->
+                <div onclick="toggleControlCenter(false)" class="flex-1 w-full cursor-pointer"></div>
+            </div>
+
+            <!-- ========================================================= -->
+            <!-- 6. SYSTEM TOAST NOTIFICATION BANNER                       -->
+            <!-- ========================================================= -->
+            <div id="osToast" class="absolute top-12 left-1/2 -translate-x-1/2 z-[55] w-[88%] liquid-glass-heavy rounded-2xl px-4 py-2.5 flex items-center gap-2.5 border border-cyan-400/40 opacity-0 -translate-y-4 pointer-events-none transition-all duration-300">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f3ff] shrink-0"></span>
+                <span id="osToastText" class="font-mono text-[11px] text-cyan-100 truncate">SYSTEM READY</span>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        /* =============================================================
+           FRX OS CORE KERNEL SCRIPT
+           ============================================================= */
+        const state = {
+            isLocked: true,
+            isControlCenterOpen: false,
+            activeApp: null,
+            isPlayingMusic: true,
+            currentTrackIndex: 0,
+            volume: 75,
+            brightness: 100,
+            quickSettings: {
+                wifi: true,
+                neural: true,
+                overdrive: false,
+                stealth: false
+            }
+        };
+
+        const tracks = [
+            { title: "NEON OVERDRIVE", artist: "KRYO SYNTH // 2088 EDITION" },
+            { title: "GHOST IN THE GLASS", artist: "NEXO PROTOCOL // LOSSLESS" },
+            { title: "MIDNIGHT KOWLOON", artist: "CYBERPULSE // 128 BPM" }
+        ];
+
+        // 1. Live Clock & Date Synchronization
+        function updateClocks() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const timeStr = `${hours}:${minutes}`;
+
+            const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+            const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+            const dayName = days[now.getDay()];
+            const monthName = months[now.getMonth()];
+            const dateNum = String(now.getDate()).padStart(2, '0');
+
+            document.getElementById('statusTime').textContent = timeStr;
+            document.getElementById('lockClock').textContent = timeStr;
+            document.getElementById('homeClock').textContent = timeStr;
+            document.getElementById('lockDate').textContent = `${dayName}, ${monthName} ${dateNum} // NEO-TAIPEI`;
+            document.getElementById('homeDate').textContent = `${dayName} • ${monthName} ${dateNum}`;
+        }
+        setInterval(updateClocks, 1000);
+        updateClocks();
+
+        // 2. Simulated Real-Time CPU / RAM / NPU Telemetry
+        function updateTelemetry() {
+            const boost = state.quickSettings.overdrive ? 28 : 0;
+            const cpu = Math.min(98, Math.max(18, Math.floor(32 + Math.random() * 24 + boost)));
+            const ram = Math.min(94, Math.max(45, Math.floor(56 + Math.random() * 12 + (boost * 0.4))));
+            const npu = Math.min(99, Math.max(12, Math.floor(20 + Math.random() * 25 + boost)));
+            const temp = (36.5 + (cpu / 100) * 9.2).toFixed(1);
+
+            document.getElementById('cpuVal').textContent = `${cpu}%`;
+            document.getElementById('cpuBar').style.width = `${cpu}%`;
+
+            document.getElementById('ramVal').textContent = `${ram}%`;
+            document.getElementById('ramBar').style.width = `${ram}%`;
+
+            document.getElementById('npuVal').textContent = `${npu}%`;
+            document.getElementById('npuBar').style.width = `${npu}%`;
+
+            const tempEl = document.getElementById('telemetryTemp');
+            tempEl.textContent = state.quickSettings.overdrive ? `${temp}°C OVERDRIVE` : `${temp}°C OPTIMAL`;
+        }
+        setInterval(updateTelemetry, 1800);
+
+        // 3. Lock & Unlock OS Transitions
+        function unlockOS() {
+            if (!state.isLocked) return;
+            state.isLocked = false;
+
+            const lockScreen = document.getElementById('lockScreen');
+            const homeScreen = document.getElementById('homeScreen');
+            const islandLabel = document.getElementById('islandLabel');
+
+            // Smooth exit for lock screen
+            lockScreen.style.opacity = '0';
+            lockScreen.style.transform = 'scale(1.08)';
+            lockScreen.style.filter = 'blur(12px)';
+            lockScreen.style.pointerEvents = 'none';
+
+            // Smooth entrance for home screen
+            homeScreen.style.opacity = '1';
+            homeScreen.style.transform = 'scale(1)';
+            homeScreen.style.pointerEvents = 'auto';
+
+            islandLabel.textContent = 'UNLOCKED';
+            setTimeout(() => { islandLabel.textContent = 'FRX'; }, 1800);
+        }
+
+        function lockOS() {
+            toggleControlCenter(false);
+            closeAllApps();
+            state.isLocked = true;
+
+            const lockScreen = document.getElementById('lockScreen');
+            const homeScreen = document.getElementById('homeScreen');
+
+            lockScreen.style.opacity = '1';
+            lockScreen.style.transform = 'scale(1)';
+            lockScreen.style.filter = 'blur(0px)';
+            lockScreen.style.pointerEvents = 'auto';
+
+            homeScreen.style.opacity = '0';
+            homeScreen.style.transform = 'scale(0.95)';
+            homeScreen.style.pointerEvents = 'none';
+        }
+
+        function togglePowerLock() {
+            if (state.isLocked) {
+                unlockOS();
+            } else {
+                lockOS();
+            }
+        }
+
+        // 4. Control Center Slide-down Interaction
+        function toggleControlCenter(forceState) {
+            const nextState = typeof forceState === 'boolean' ? forceState : !state.isControlCenterOpen;
+            state.isControlCenterOpen = nextState;
+
+            const cc = document.getElementById('controlCenter');
+            const panel = document.getElementById('controlCenterPanel');
+
+            if (nextState) {
+                cc.style.opacity = '1';
+                cc.style.pointerEvents = 'auto';
+                panel.style.transform = 'translateY(0)';
+            } else {
+                cc.style.opacity = '0';
+                cc.style.pointerEvents = 'none';
+                panel.style.transform = 'translateY(-28px)';
+            }
+        }
+
+        function toggleQuickSetting(key) {
+            state.quickSettings[key] = !state.quickSettings[key];
+            const isActive = state.quickSettings[key];
+
+            if (key === 'wifi') {
+                const btn = document.getElementById('cc-wifi');
+                const sub = document.getElementById('cc-wifi-sub');
+                const statusIcon = document.getElementById('statusWifiIcon');
+                btn.className = isActive 
+                    ? 'cc-toggle active p-3.5 rounded-2xl bg-cyan-500/20 border border-cyan-400/50 shadow-[0_0_20px_rgba(0,243,255,0.2)] flex items-center gap-3 text-left transition-all cursor-pointer'
+                    : 'cc-toggle p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3 text-left transition-all cursor-pointer opacity-60';
+                sub.textContent = isActive ? 'CYBER_NET' : 'OFFLINE';
+                statusIcon.style.opacity = isActive ? '1' : '0.3';
+            }
+
+            if (key === 'neural') {
+                const btn = document.getElementById('cc-neural');
+                const sub = document.getElementById('cc-neural-sub');
+                btn.className = isActive 
+                    ? 'cc-toggle active p-3.5 rounded-2xl bg-pink-500/20 border border-pink-400/50 shadow-[0_0_20px_rgba(255,0,127,0.2)] flex items-center gap-3 text-left transition-all cursor-pointer'
+                    : 'cc-toggle p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3 text-left transition-all cursor-pointer opacity-60';
+                sub.textContent = isActive ? 'SYNCED' : 'PAUSED';
+            }
+
+            if (key === 'overdrive') {
+                const btn = document.getElementById('cc-overdrive');
+                const icon = document.getElementById('cc-overdrive-icon');
+                const sub = document.getElementById('cc-overdrive-sub');
+                btn.className = isActive 
+                    ? 'cc-toggle active p-3.5 rounded-2xl bg-amber-500/20 border border-amber-400/50 shadow-[0_0_20px_rgba(245,158,11,0.25)] flex items-center gap-3 text-left transition-all cursor-pointer'
+                    : 'cc-toggle p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3 text-left transition-all cursor-pointer';
+                icon.className = isActive
+                    ? 'w-9 h-9 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center shrink-0'
+                    : 'w-9 h-9 rounded-xl bg-white/10 text-slate-300 flex items-center justify-center shrink-0';
+                sub.textContent = isActive ? 'MAX CLOCK' : 'STANDBY';
+                sub.className = isActive ? 'font-mono text-[10px] text-amber-300' : 'font-mono text-[10px] text-slate-400';
+                updateTelemetry();
+                showToast(isActive ? 'OVERDRIVE // 核心時脈已解鎖至 4.8GHz' : 'OVERDRIVE // 恢復標準功耗模式');
+            }
+
+            if (key === 'stealth') {
+                const btn = document.getElementById('cc-stealth');
+                const icon = document.getElementById('cc-stealth-icon');
+                const sub = document.getElementById('cc-stealth-sub');
+                btn.className = isActive 
+                    ? 'cc-toggle active p-3.5 rounded-2xl bg-emerald-500/20 border border-emerald-400/50 shadow-[0_0_20px_rgba(16,185,129,0.25)] flex items-center gap-3 text-left transition-all cursor-pointer'
+                    : 'cc-toggle p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3 text-left transition-all cursor-pointer';
+                icon.className = isActive
+                    ? 'w-9 h-9 rounded-xl bg-emerald-400 text-slate-950 flex items-center justify-center shrink-0'
+                    : 'w-9 h-9 rounded-xl bg-white/10 text-slate-300 flex items-center justify-center shrink-0';
+                sub.textContent = isActive ? 'ENCRYPTED' : 'OFF';
+                sub.className = isActive ? 'font-mono text-[10px] text-emerald-300' : 'font-mono text-[10px] text-slate-400';
+                showToast(isActive ? 'GHOST VPN // IP 位址已跳轉至離岸節點' : 'GHOST VPN // 隱匿通道已關閉');
+            }
+        }
+
+        function setScreenBrightness(val) {
+            state.brightness = val;
+            document.getElementById('brightnessLabel').textContent = `${val}%`;
+            const darkness = (100 - val) / 115;
+            document.getElementById('brightnessOverlay').style.opacity = darkness.toFixed(2);
+        }
+
+        function setSystemVolume(val) {
+            state.volume = Math.min(100, Math.max(0, Number(val)));
+            document.getElementById('volumeLabel').textContent = `${state.volume}%`;
+            document.getElementById('volumeSlider').value = state.volume;
+        }
+
+        function adjustVolumeStep(delta) {
+            setSystemVolume(state.volume + delta);
+            showToast(`AUDIO GAIN // ${state.volume}%`);
+        }
+
+        // 5. App Launch & Close Management
+        function openApp(appId) {
+            closeAllApps();
+            state.activeApp = appId;
+            const appEl = document.getElementById(`app-${appId}`);
+            if (appEl) {
+                appEl.style.opacity = '1';
+                appEl.style.transform = 'scale(1)';
+                appEl.style.pointerEvents = 'auto';
+            }
+        }
+
+        function closeAllApps() {
+            state.activeApp = null;
+            ['nexo', 'music', 'terminal'].forEach(id => {
+                const el = document.getElementById(`app-${id}`);
+                if (el) {
+                    el.style.opacity = '0';
+                    el.style.transform = 'scale(0.95)';
+                    el.style.pointerEvents = 'none';
+                }
+            });
+        }
+
+        // 6. NEXO AI Interactive Chat Logic
+        function sendNexoPrompt(text) {
+            const feed = document.getElementById('nexoChatFeed');
+            
+            // User Bubble
+            const userMsg = document.createElement('div');
+            userMsg.className = 'ml-8 rounded-2xl rounded-tr-sm p-3 text-xs bg-cyan-500/20 border border-cyan-400/35 text-white';
+            userMsg.textContent = text;
+            feed.appendChild(userMsg);
+            feed.scrollTop = feed.scrollHeight;
+
+            // Simulated AI Response
+            setTimeout(() => {
+                let reply = "指令已接收。神經突觸正在運算最佳路徑，目前所有安全防火牆均處於 100% 完整狀態。";
+                if (text.includes('狀態')) {
+                    reply = `系統核心溫度 ${document.getElementById('telemetryTemp').textContent}，記憶體頻寬穩定。建議保持 Liquid Glass 渲染引擎開啟以獲得最佳視覺回饋。`;
+                } else if (text.includes('超頻')) {
+                    if (!state.quickSettings.overdrive) toggleQuickSetting('overdrive');
+                    reply = "已為您啟動 KRYO-X9 超頻協定！CPU 與神經核心頻率提升 28%，霓虹散熱迴路已全速運轉。";
+                } else if (text.includes('網路') || text.includes('掃描')) {
+                    reply = "掃描完成：偵測到 3 個加密量子中繼站（延遲 4ms），無惡意入侵封包。";
+                }
+
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'liquid-glass rounded-2xl rounded-tl-sm p-3 text-xs text-slate-200 border-l-2 border-l-cyan-400';
+                aiMsg.innerHTML = `<div class="font-mono text-[9px] text-cyan-300 mb-1">NEXO CORE // RESPONSE</div>${reply}`;
+                feed.appendChild(aiMsg);
+                feed.scrollTop = feed.scrollHeight;
+            }, 450);
+        }
+
+        function handleNexoSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('nexoInput');
+            const val = input.value.trim();
+            if (!val) return;
+            input.value = '';
+            sendNexoPrompt(val);
+        }
+
+        // 7. FRX Music Interactive Logic
+        function togglePlayMusic() {
+            state.isPlayingMusic = !state.isPlayingMusic;
+            const vis = document.getElementById('musicVisualizer');
+            const icon = document.getElementById('playPauseIcon');
+
+            if (state.isPlayingMusic) {
+                vis.classList.remove('eq-paused');
+                icon.innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
+            } else {
+                vis.classList.add('eq-paused');
+                icon.innerHTML = '<polygon points="6 4 20 12 6 20 6 4"/>';
+            }
+        }
+
+        function switchTrack(dir) {
+            state.currentTrackIndex = (state.currentTrackIndex + dir + tracks.length) % tracks.length;
+            const track = tracks[state.currentTrackIndex];
+            document.getElementById('trackTitle').textContent = track.title;
+            document.getElementById('trackArtist').textContent = track.artist;
+            if (!state.isPlayingMusic) togglePlayMusic();
+        }
+
+        // 8. FRX-Shell Terminal Logic
+        function runTerminalCmd(cmd) {
+            const out = document.getElementById('terminalOutput');
+            const cleanCmd = cmd.trim().toLowerCase();
+
+            if (cleanCmd === 'clear') {
+                out.innerHTML = '<div class="text-cyan-400">Console buffer cleared.</div>';
+                return;
+            }
+
+            const cmdLine = document.createElement('div');
+            cmdLine.className = 'text-white';
+            cmdLine.textContent = `$ ${cmd}`;
+            out.appendChild(cmdLine);
+
+            const resLine = document.createElement('div');
+            if (cleanCmd === 'help') {
+                resLine.innerHTML = 'Available commands: <span class="text-cyan-300">sysinfo</span>, <span class="text-cyan-300">hack</span>, <span class="text-cyan-300">overdrive</span>, <span class="text-cyan-300">clear</span>';
+            } else if (cleanCmd === 'sysinfo') {
+                resLine.innerHTML = 'OS: FRX OS v4.9.2 | CPU: KRYO-X9 16-Core | GPU: Adreno-Quantum | Display: 144Hz Liquid OLED';
+            } else if (cleanCmd === 'hack') {
+                resLine.innerHTML = '<span class="text-pink-400">[!] Bypassing ICE firewall... Access Granted [0x9F82A]</span>';
+            } else if (cleanCmd === 'overdrive') {
+                toggleQuickSetting('overdrive');
+                resLine.textContent = 'Toggled Quantum Overdrive state.';
+            } else {
+                resLine.innerHTML = `<span class="text-rose-400">Command not found: ${cmd}</span>`;
+            }
+            out.appendChild(resLine);
+            out.scrollTop = out.scrollHeight;
+        }
+
+        function handleTerminalSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('terminalInput');
+            if (!input.value.trim()) return;
+            runTerminalCmd(input.value);
+            input.value = '';
+        }
+
+        // 9. System Toast Helper
+        let toastTimer = null;
+        function showToast(msg) {
+            const toast = document.getElementById('osToast');
+            const text = document.getElementById('osToastText');
+            text.textContent = msg;
+            toast.style.opacity = '1';
+            toast.style.transform = 'translate(-50%, 0)';
+
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%, -16px)';
+            }, 2400);
+        }
+    </script>
+</body>
+</html>
